@@ -32,8 +32,6 @@ from six.moves.urllib.error import URLError  # pylint: disable=import-error
 
 from msrestazure.azure_exceptions import CloudError
 
-import azure.cli.core.azlogging as azlogging
-from azure.cli.core.application import APPLICATION
 from azure.cli.command_modules.acs import acs_client, proxy
 from azure.cli.command_modules.acs._params import regionsInPreview, regionsInProd
 from azure.cli.core.util import CLIError, shell_safe_json_parse, truncate_text
@@ -59,9 +57,10 @@ from azure.graphrbac.models import (ApplicationCreateParameters,
                                     GetObjectsParameters)
 from azure.mgmt.authorization.models import RoleAssignmentProperties
 
+from knack.util import CLIError
+
 from ._client_factory import (_auth_client_factory, _graph_client_factory)
 
-logger = azlogging.get_az_logger(__name__)
 
 # pylint:disable=too-many-lines
 
@@ -361,8 +360,8 @@ def _add_role_assignment(role, service_principal, delay=2):
     return True
 
 
-def _get_subscription_id():
-    _, sub_id, _ = Profile().get_login_credentials(subscription_id=None)
+def _get_subscription_id(cli_ctx):
+    _, sub_id, _ = Profile(cli_ctx).get_login_credentials(subscription_id=None)
     return sub_id
 
 
@@ -384,7 +383,7 @@ def list_acs_locations():
 
 # pylint: disable=too-many-locals
 # pylint: disable-msg=too-many-arguments
-def acs_create(resource_group_name, deployment_name, name, ssh_key_value, dns_name_prefix=None,
+def acs_create(cmd, resource_group_name, deployment_name, name, ssh_key_value, dns_name_prefix=None,
                location=None,
                admin_username="azureuser",
                api_version=None,
@@ -491,7 +490,7 @@ def acs_create(resource_group_name, deployment_name, name, ssh_key_value, dns_na
     if ssh_key_value is not None and not is_valid_ssh_rsa_public_key(ssh_key_value):
         raise CLIError('Provided ssh key ({}) is invalid or non-existent'.format(ssh_key_value))
 
-    subscription_id = _get_subscription_id()
+    subscription_id = _get_subscription_id(cmd.cli_ctx)
     if not dns_name_prefix:
         dns_name_prefix = _get_default_dns_prefix(name, resource_group_name, subscription_id)
 

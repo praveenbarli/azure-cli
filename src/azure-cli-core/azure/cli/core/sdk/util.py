@@ -3,30 +3,43 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
-from azure.cli.core.commands import register_cli_argument, cli_command
-from azure.cli.core.commands.parameters import ignore_type
-from azure.cli.core.commands.arm import cli_generic_update_command
+from azure.cli.core.commands.arm import _cli_generic_update_command, _cli_generic_wait_command
 
+from knack.arguments import ignore_type, ArgumentsContext
+from knack.commands import CommandGroup as KnackCommandGroup
+from knack.util import CLIError
 
 # COMMANDS UTILITIES
 
-def create_service_adapter(service_model, service_class=None):
-    def _service_adapter(method_name):
-        return '{}#{}.{}'.format(service_model, service_class, method_name) if service_class else \
-            '{}#{}'.format(service_model, method_name)
-
-    return _service_adapter
+CLI_COMMAND_KWARGS = ['transform', 'table_transformer', 'confirmation', 'exception_handler', 'min_api', 'max_api',
+                      'client_factory', 'operations_tmpl', 'no_wait_param', 'validator', 'resource_type']
 
 
 # pylint: disable=too-few-public-methods
-class ServiceGroup(object):
-    def __init__(self, scope, client_factory, service_adapter=None, custom_path=None,
-                 exception_handler=None):
-        self._scope = scope
-        self._factory = client_factory
-        self._service_adapter = service_adapter or (lambda name: name)
-        self._custom_path = custom_path
-        self._exception_handler = exception_handler
+class CliCommandType(object):
+
+    def __init__(self, overrides=None, **kwargs):
+        if isinstance(overrides, str):
+            raise ValueError("Overrides has to be a {} (cannot be a string)".format(CliCommandType.__name__))
+        unrecognized_kwargs = [x for x in kwargs if x not in CLI_COMMAND_KWARGS]
+        if unrecognized_kwargs:
+            raise TypeError('unrecognized kwargs: {}'.format(unrecognized_kwargs))
+        self.settings = {}
+        self.update(overrides, **kwargs)
+
+    def update(self, other=None, **kwargs):
+        if other:
+            self.settings.update(**other.settings)
+        self.settings.update(**kwargs)
+
+
+class _CommandGroup(KnackCommandGroup):
+
+    def __init__(self, module_name, command_loader, group_name, **kwargs):
+        operations_tmpl = kwargs.pop('operations_tmpl', None)
+        super(_CommandGroup, self).__init__(module_name, command_loader, group_name,
+                                            operations_tmpl, **kwargs)
+        self.group_kwargs['operations_tmpl'] = operations_tmpl
 
     def __enter__(self):
         return self
@@ -34,88 +47,117 @@ class ServiceGroup(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    def group(self, group_name, exception_handler=None):
-        return CommandGroup(self._scope, group_name, self._factory, self._service_adapter,
-                            self._custom_path,
-                            exception_handler=exception_handler or self._exception_handler)
-
-
-class CommandGroup(object):
-    def __init__(self, scope, group_name, client_factory, service_adapter=None, custom_path=None,
-                 exception_handler=None):
-        self._scope = scope
-        self._group_name = group_name
-        self._client_factory = client_factory
-        self._service_adapter = service_adapter or (lambda name: name)
-        self._custom_path = custom_path
-        self._exception_handler = exception_handler
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
-
-    def command(self, name, method_name, transform=None, table_transformer=None, confirmation=None,
-                exception_handler=None, deprecate_info=None, no_wait_param=None):
+    # pylint: disable=arguments-differ
+    def command(self, name, method_name=None, command_type=None, **kwargs):
         """
         Register a CLI command
         :param name: Name of the command as it will be called on the command line
         :type name: str
-        :param method_name: Name of the method the command maps to on the service adapter
+        :param method_name: Name of the method the command maps to
         :type method_name: str
-        :param transform: Transform function for transforming the output of the command
-        :type transform: function
-        :param table_transformer: Transform function to be applied to table output to create a
-        better output format for tables.
-        :type table_transformer: function
-        :param confirmation: Prompt prior to the action being executed. This is useful if the action
-        would cause a loss of data.
-        :type confirmation: bool
-        :param exception_handler: Exception handler for handling non-standard exceptions
-        :type exception_handler: function
-        :return: None
+        :param command_type: CliCommandType object containing settings to apply to the entire command group
+        :type command_type: CliCommandType
+        :param kwargs: Keyword arguments. Supported keyword arguments include:
+            - client_factory: Callable which returns a client needed to access the underlying command method. (function)
+            - confirmation: Prompt prior to the action being executed. This is useful if the action
+                            would cause a loss of data. (bool)
+            - exception_handler: Exception handler for handling non-standard exceptions (function)
+            - no_wait_param: The name of a boolean parameter that will be exposed as `--no-wait` to skip long running
+              operation polling. (string)
+            - transform: Transform function for transforming the output of the command (function)
+            - table_transformer: Transform function or JMESPath query to be applied to table output to create a
+                                 better output format for tables. (function or string)
+            - resource_type: The ResourceType enum value to use with min or max API. (ResourceType)
+            - min_api: Minimum API version required for commands within the group (string)
+            - max_api: Maximum API version required for commands within the group (string)
         :rtype: None
         """
-        cli_command(self._scope,
-                    '{} {}'.format(self._group_name, name),
-                    self._service_adapter(method_name),
-                    client_factory=self._client_factory,
-                    transform=transform,
-                    table_transformer=table_transformer,
-                    confirmation=confirmation,
-                    deprecate_info=deprecate_info,
-                    exception_handler=exception_handler or self._exception_handler,
-                    no_wait_param=no_wait_param)
+        merged_kwargs = self.group_kwargs.copy()
+        if command_type:
+            merged_kwargs.update(command_type.settings)
+        merged_kwargs.update(kwargs)
 
-    def custom_command(self, name, custom_func_name, confirmation=None,
-                       exception_handler=None, deprecate_info=None, no_wait_param=None, table_transformer=None):
-        cli_command(self._scope,
-                    '{} {}'.format(self._group_name, name),
-                    self._custom_path.format(custom_func_name),
-                    client_factory=self._client_factory,
-                    confirmation=confirmation,
-                    deprecate_info=deprecate_info,
-                    exception_handler=exception_handler or self._exception_handler,
-                    no_wait_param=no_wait_param,
-                    table_transformer=table_transformer)
+        operations_tmpl = merged_kwargs.get('operations_tmpl')
+        command_name = '{} {}'.format(self.group_name, name) if self.group_name else name
+        operation = operations_tmpl.format(method_name) if operations_tmpl else None
+        self.command_loader._cli_command(command_name, operation, **merged_kwargs)  # pylint: disable=protected-access
 
-    def generic_update_command(self, name, getter_op, setter_op, custom_func_name=None,
-                               setter_arg_name='parameters', no_wait_param=None, **kwargs):
+    def custom_command(self, name, method_name, **kwargs):
+        """
+        Register a custome CLI command.
+        :param name: Name of the command as it will be called on the command line
+        :type name: str
+        :param method_name: Name of the method the command maps to
+        :type method_name: str
+        :param kwargs: Keyword arguments. Supported keyword arguments include:
+            - client_factory: Callable which returns a client needed to access the underlying command method. (function)
+            - confirmation: Prompt prior to the action being executed. This is useful if the action
+                            would cause a loss of data. (bool)
+            - exception_handler: Exception handler for handling non-standard exceptions (function)
+            - no_wait_param: The name of a boolean parameter that will be exposed as `--no-wait` to skip long
+              running operation polling. (string)
+            - transform: Transform function for transforming the output of the command (function)
+            - table_transformer: Transform function or JMESPath query to be applied to table output to create a
+                                 better output format for tables. (function or string)
+            - resource_type: The ResourceType enum value to use with min or max API. (ResourceType)
+            - min_api: Minimum API version required for commands within the group (string)
+            - max_api: Maximum API version required for commands within the group (string)
+        :rtype: None
+        """
+        merged_kwargs = self.group_kwargs.copy()
+        merged_kwargs.update(kwargs)
+        command_type = merged_kwargs.get('custom_command_type')
+        if not command_type:
+            raise CLIError('Module does not have `custom_command_type` set!')
+        merged_kwargs.update(command_type.settings)
+
+        # if custom_command_type has no client_factory and no client_factory is specified, specifically apply None
+        merged_kwargs['client_factory'] = command_type.settings.get('client_factory', None)
+        merged_kwargs['client_factory'] = kwargs.get('client_factory', None)
+        command_name = '{} {}'.format(self.group_name, name) if self.group_name else name
+        self.command_loader._cli_command(command_name,  # pylint: disable=protected-access
+                                         operation=merged_kwargs['operations_tmpl'].format(method_name),
+                                         **merged_kwargs)
+
+    def generic_update_command(self, name,
+                               getter_name='get', setter_name='create_or_update', setter_arg_name='parameters',
+                               child_collection_prop_name=None, child_collection_key='name', child_arg_name='item_name',
+                               custom_func_name=None, **kwargs):
+
+        merged_kwargs = self.group_kwargs.copy()
+        merged_kwargs.update(kwargs)
+
+        getter_tmpl = merged_kwargs.get('operations_tmpl')
+        setter_tmpl = merged_kwargs.get('operations_tmpl')
+
+        custom_tmpl = None
         if custom_func_name:
-            custom_function_op = self._custom_path.format(custom_func_name)
-        else:
-            custom_function_op = None
+            custom_tmpl = self.group_kwargs.get('custom_command_type').settings['operations_tmpl']
 
-        cli_generic_update_command(
-            self._scope,
-            '{} {}'.format(self._group_name, name),
-            self._service_adapter(getter_op),
-            self._service_adapter(setter_op),
-            factory=self._client_factory,
-            custom_function_op=custom_function_op,
+        _cli_generic_update_command(
+            self.command_loader,
+            '{} {}'.format(self.group_name, name),
+            getter_op=getter_tmpl.format(getter_name),
+            setter_op=setter_tmpl.format(setter_name),
             setter_arg_name=setter_arg_name,
-            no_wait_param=no_wait_param, **kwargs)
+            custom_function_op=custom_tmpl.format(custom_func_name) if custom_func_name else None,
+            child_collection_prop_name=child_collection_prop_name,
+            child_collection_key=child_collection_key,
+            child_arg_name=child_arg_name,
+            **merged_kwargs)
+
+    def generic_wait_command(self, name, getter_name='get', **kwargs):
+
+        merged_kwargs = self.group_kwargs.copy()
+        merged_kwargs.update(kwargs)
+
+        getter_tmpl = merged_kwargs.get('operations_tmpl')
+
+        _cli_generic_wait_command(
+            self.command_loader,
+            '{} {}'.format(self.group_name, name),
+            getter_op=getter_tmpl.format(getter_name),
+            **merged_kwargs)
 
 
 # PARAMETERS UTILITIES
@@ -135,51 +177,49 @@ def patch_arg_update_description(description):
     return _patch_action
 
 
-class ParametersContext(object):
-    def __init__(self, command):
-        self._commmand = command
+class _ParametersContext(ArgumentsContext):
 
-    def __enter__(self):
-        return self
+    def __init__(self, command_loader, scope, **kwargs):
+        super(_ParametersContext, self).__init__(command_loader, scope)
+        self.scope = scope  # this is called "command" in knack, but that is not an accurate name
+        self.group_kwargs = kwargs
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+    # pylint: disable=arguments-differ
+    def argument(self, dest, arg_type=None, **kwargs):
+        merged_kwargs = self.group_kwargs.copy()
+        if arg_type:
+            merged_kwargs.update(arg_type.settings)
+        merged_kwargs.update(kwargs)
+        if self.command_loader.supported_api_version(resource_type=merged_kwargs.get('resource_type'),
+                                                     min_api=merged_kwargs.get('min_api'),
+                                                     max_api=merged_kwargs.get('max_api')):
+            super(_ParametersContext, self).argument(dest, **merged_kwargs)
+        else:
+            self.ignore(dest)
 
-    def ignore(self, argument_name):
-        register_cli_argument(self._commmand, argument_name, ignore_type)
+    # pylint: disable=arguments-differ
+    def alias(self, dest, options_list, **kwargs):
+        merged_kwargs = self.group_kwargs.copy()
+        arg_type = kwargs.get('arg_type', None)
+        if arg_type:
+            merged_kwargs.update(arg_type.settings)
+        merged_kwargs.update(kwargs)
+        super(_ParametersContext, self).register_alias(dest, options_list, **kwargs)
 
-    def argument(self, argument_name, arg_type=None, **kwargs):
-        register_cli_argument(self._commmand, argument_name, arg_type=arg_type, **kwargs)
-
-    def register_alias(self, argument_name, options_list, **kwargs):
-        register_cli_argument(self._commmand, argument_name, options_list=options_list, **kwargs)
-
-    def register(self, argument_name, options_list, **kwargs):
-        register_cli_argument(self._commmand, argument_name, options_list=options_list, **kwargs)
-
-    def extra(self, argument_name, **kwargs):
-        from azure.cli.core.commands import register_extra_cli_argument
-        register_extra_cli_argument(self._commmand, argument_name, **kwargs)
-
-    def expand(self, argument_name, model_type, group_name=None, patches=None):
+    def expand(self, dest, model_type, group_name=None, patches=None):
         # TODO:
         # two privates symbols are imported here. they should be made public or this utility class
         # should be moved into azure.cli.core
-        from azure.cli.core.commands import _cli_extra_argument_registry
-        from azure.cli.core.commands._introspection import \
-            (extract_args_from_signature, _option_descriptions)
-
         from azure.cli.core.sdk.validators import get_complex_argument_processor
+        from knack.introspection import extract_args_from_signature, option_descriptions
 
         if not patches:
             patches = dict()
 
-        self.ignore(argument_name)
-
         # fetch the documentation for model parameters first. for models, which are the classes
         # derive from msrest.serialization.Model and used in the SDK API to carry parameters, the
         # document of their properties are attached to the classes instead of constructors.
-        parameter_docs = _option_descriptions(model_type)
+        parameter_docs = option_descriptions(model_type)
 
         expanded_arguments = []
         for name, arg in extract_args_from_signature(model_type.__init__):
@@ -192,11 +232,21 @@ class ParametersContext(object):
             if name in patches:
                 patches[name](arg)
 
-            _cli_extra_argument_registry[self._commmand][name] = arg
+            self.extra(name, arg_type=arg)
             expanded_arguments.append(name)
 
-        self.argument(argument_name,
+        self.argument(dest,
                       arg_type=ignore_type,
-                      validator=get_complex_argument_processor(expanded_arguments,
-                                                               argument_name,
-                                                               model_type))
+                      validator=get_complex_argument_processor(expanded_arguments, dest, model_type))
+
+    def ignore(self, *args):
+        for arg in args:
+            super(_ParametersContext, self).ignore(arg)
+
+    def extra(self, dest, **kwargs):
+        merged_kwargs = self.group_kwargs.copy()
+        merged_kwargs.update(kwargs)
+        if self.command_loader.supported_api_version(resource_type=merged_kwargs.get('resource_type'),
+                                                     min_api=merged_kwargs.get('min_api'),
+                                                     max_api=merged_kwargs.get('max_api')):
+            super(_ParametersContext, self).extra(dest, **merged_kwargs)

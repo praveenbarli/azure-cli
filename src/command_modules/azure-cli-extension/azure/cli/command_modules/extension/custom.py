@@ -19,12 +19,12 @@ from azure.cli.core.util import CLIError
 from azure.cli.core.extension import (extension_exists, get_extension_path, get_extensions,
                                       get_extension, ext_compat_with_cli,
                                       WheelExtension, ExtensionNotInstalledException)
-import azure.cli.core.azlogging as azlogging
+
+from knack.log import get_logger
 
 from ._homebrew_patch import HomebrewPipPatch
 
-
-logger = azlogging.get_az_logger(__name__)
+logger = get_logger(__name__)
 
 OUT_KEY_NAME = 'name'
 OUT_KEY_VERSION = 'version'
@@ -112,7 +112,7 @@ def _add_whl_ext(source):  # pylint: disable=too-many-statements
         if not os.path.isfile(ext_file):
             raise CLIError("File {} not found.".format(source))
     # Validate the extension
-    logger.debug('Validating the extension {}'.format(ext_file))
+    logger.debug('Validating the extension %s', ext_file)
     try:
         _validate_whl_extension(ext_file)
     except AssertionError:
@@ -120,7 +120,7 @@ def _add_whl_ext(source):  # pylint: disable=too-many-statements
         raise CLIError('The extension is invalid. Use --debug for more information.')
     except CLIError as e:
         raise e
-    logger.debug('Validation successful on {}'.format(ext_file))
+    logger.debug('Validation successful on %s', ext_file)
     # Install with pip
     extension_path = get_extension_path(extension_name)
     pip_args = ['install', '--target', extension_path, ext_file]

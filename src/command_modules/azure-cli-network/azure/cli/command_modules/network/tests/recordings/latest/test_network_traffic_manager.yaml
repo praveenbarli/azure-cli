@@ -1,16 +1,16 @@
 interactions:
 - request:
-    body: '{"location": "westus", "tags": {"use": "az-test"}}'
+    body: '{"tags": {"use": "az-test"}, "location": "westus"}'
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [group create]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['50']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
-          msrest_azure/0.4.14 resourcemanagementclient/1.2.0rc2 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
+          msrest_azure/0.4.14 resourcemanagementclient/1.2.0rc3 Azure-SDK-For-Python
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: PUT
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_traffic_manager000001?api-version=2017-05-10
@@ -20,24 +20,24 @@ interactions:
       cache-control: [no-cache]
       content-length: ['328']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:44 GMT']
+      date: ['Fri, 13 Oct 2017 21:56:58 GMT']
       expires: ['-1']
       pragma: [no-cache]
       strict-transport-security: [max-age=31536000; includeSubDomains]
-      x-ms-ratelimit-remaining-subscription-writes: ['1199']
+      x-ms-ratelimit-remaining-subscription-writes: ['1194']
     status: {code: 201, message: Created}
 - request:
     body: '{"name": "myfoobar1", "type": "Microsoft.Network/trafficManagerProfiles"}'
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager profile check-dns]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['73']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: POST
     uri: https://management.azure.com/providers/Microsoft.Network/checkTrafficManagerNameAvailability?api-version=2017-05-01
@@ -47,7 +47,7 @@ interactions:
       cache-control: [private]
       content-length: ['121']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:44 GMT']
+      date: ['Fri, 13 Oct 2017 21:56:58 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -58,19 +58,20 @@ interactions:
       x-powered-by: [ASP.NET]
     status: {code: 200, message: OK}
 - request:
-    body: '{"location": "global", "properties": {"profileStatus": "Enabled", "trafficRoutingMethod":
-      "Priority", "dnsConfig": {"ttl": 30, "relativeName": "mytrafficmanager001100a"},
-      "monitorConfig": {"path": "/", "port": 80, "protocol": "HTTP"}}}'
+    body: '{"properties": {"trafficRoutingMethod": "Priority", "dnsConfig": {"ttl":
+      30, "relativeName": "mytrafficmanager001100a"}, "profileStatus": "enabled",
+      "monitorConfig": {"port": 80, "path": "/", "protocol": "HTTP"}}, "location":
+      "global"}'
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager profile create]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['235']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: PUT
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -80,7 +81,7 @@ interactions:
       cache-control: [private]
       content-length: ['687']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:45 GMT']
+      date: ['Fri, 13 Oct 2017 21:56:59 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       x-aspnet-version: [4.0.30319]
@@ -93,12 +94,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager profile show]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -108,7 +109,7 @@ interactions:
       cache-control: [private]
       content-length: ['697']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:46 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:00 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -123,12 +124,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager profile update]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -138,7 +139,7 @@ interactions:
       cache-control: [private]
       content-length: ['697']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:47 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:01 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -149,21 +150,21 @@ interactions:
       x-powered-by: [ASP.NET]
     status: {code: 200, message: OK}
 - request:
-    body: '{"location": "global", "properties": {"endpoints": [], "profileStatus":
-      "Enabled", "trafficRoutingMethod": "Weighted", "dnsConfig": {"ttl": 30, "relativeName":
-      "mytrafficmanager001100a"}, "monitorConfig": {"profileMonitorStatus": "Inactive",
-      "protocol": "HTTP", "intervalInSeconds": 30, "path": "/", "toleratedNumberOfFailures":
-      3, "timeoutInSeconds": 10, "port": 80}}, "tags": {}}'
+    body: '{"properties": {"trafficRoutingMethod": "Weighted", "dnsConfig": {"ttl":
+      30, "relativeName": "mytrafficmanager001100a"}, "profileStatus": "Enabled",
+      "monitorConfig": {"path": "/", "timeoutInSeconds": 10, "protocol": "HTTP", "port":
+      80, "intervalInSeconds": 30, "toleratedNumberOfFailures": 3, "profileMonitorStatus":
+      "Inactive"}, "endpoints": []}, "tags": {}, "location": "global"}'
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager profile update]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['381']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: PUT
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -173,7 +174,7 @@ interactions:
       cache-control: [private]
       content-length: ['697']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:47 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:02 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -188,12 +189,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager profile list]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles?api-version=2017-05-01
@@ -203,7 +204,7 @@ interactions:
       cache-control: [private]
       content-length: ['703']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:48 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:02 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -218,12 +219,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint create]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -233,7 +234,7 @@ interactions:
       cache-control: [private]
       content-length: ['697']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:48 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:02 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -244,17 +245,17 @@ interactions:
       x-powered-by: [ASP.NET]
     status: {code: 200, message: OK}
 - request:
-    body: '{"properties": {"weight": 50, "target": "www.microsoft.com"}}'
+    body: '{"properties": {"target": "www.microsoft.com", "weight": 50}}'
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint create]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['61']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: PUT
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile/externalEndpoints/myendpoint?api-version=2017-05-01
@@ -264,12 +265,12 @@ interactions:
       cache-control: [private]
       content-length: ['506']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:50 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:04 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       x-aspnet-version: [4.0.30319]
       x-content-type-options: [nosniff]
-      x-ms-ratelimit-remaining-subscription-writes: ['1199']
+      x-ms-ratelimit-remaining-subscription-writes: ['1196']
       x-powered-by: [ASP.NET]
     status: {code: 201, message: Created}
 - request:
@@ -277,12 +278,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint update]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile/externalEndpoints/myendpoint?api-version=2017-05-01
@@ -292,7 +293,7 @@ interactions:
       cache-control: [private]
       content-length: ['506']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:50 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:03 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -302,18 +303,18 @@ interactions:
       x-powered-by: [ASP.NET]
     status: {code: 200, message: OK}
 - request:
-    body: '{"properties": {"priority": 1, "endpointStatus": "Enabled", "endpointMonitorStatus":
-      "CheckingEndpoint", "target": "www.contoso.com", "weight": 25}}'
+    body: '{"properties": {"endpointStatus": "Enabled", "endpointMonitorStatus": "CheckingEndpoint",
+      "target": "www.contoso.com", "weight": 25, "priority": 1}}'
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint update]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['148']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: PUT
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile/externalEndpoints/myendpoint?api-version=2017-05-01
@@ -323,12 +324,12 @@ interactions:
       cache-control: [private]
       content-length: ['504']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:51 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:05 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       x-aspnet-version: [4.0.30319]
       x-content-type-options: [nosniff]
-      x-ms-ratelimit-remaining-subscription-writes: ['1199']
+      x-ms-ratelimit-remaining-subscription-writes: ['1197']
       x-powered-by: [ASP.NET]
     status: {code: 201, message: Created}
 - request:
@@ -336,12 +337,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint show]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile/externalEndpoints/myendpoint?api-version=2017-05-01
@@ -351,7 +352,7 @@ interactions:
       cache-control: [private]
       content-length: ['504']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:52 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:05 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -365,12 +366,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint list]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -380,7 +381,7 @@ interactions:
       cache-control: [private]
       content-length: ['1210']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:52 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:05 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
@@ -395,13 +396,13 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint delete]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['0']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: DELETE
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile/externalEndpoints/myendpoint?api-version=2017-05-01
@@ -410,12 +411,12 @@ interactions:
     headers:
       cache-control: [private]
       content-length: ['0']
-      date: ['Mon, 25 Sep 2017 16:33:53 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:06 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       x-aspnet-version: [4.0.30319]
       x-content-type-options: [nosniff]
-      x-ms-ratelimit-remaining-subscription-writes: ['1199']
+      x-ms-ratelimit-remaining-subscription-writes: ['1194']
       x-powered-by: [ASP.NET]
     status: {code: 200, message: OK}
 - request:
@@ -423,12 +424,12 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager endpoint list]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: GET
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -438,14 +439,14 @@ interactions:
       cache-control: [private]
       content-length: ['697']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 25 Sep 2017 16:33:55 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:07 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       transfer-encoding: [chunked]
       vary: [Accept-Encoding]
       x-aspnet-version: [4.0.30319]
       x-content-type-options: [nosniff]
-      x-ms-ratelimit-remaining-subscription-resource-requests: ['10799']
+      x-ms-ratelimit-remaining-subscription-resource-requests: ['10798']
       x-powered-by: [ASP.NET]
     status: {code: 200, message: OK}
 - request:
@@ -453,13 +454,13 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [network traffic-manager profile delete]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['0']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
           msrest_azure/0.4.14 trafficmanagermanagementclient/0.40.0 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: DELETE
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/cli_test_traffic_manager000001/providers/Microsoft.Network/trafficmanagerprofiles/mytmprofile?api-version=2017-05-01
@@ -468,7 +469,7 @@ interactions:
     headers:
       cache-control: [private]
       content-length: ['0']
-      date: ['Mon, 25 Sep 2017 16:33:56 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:12 GMT']
       server: [Microsoft-IIS/8.5]
       strict-transport-security: [max-age=31536000; includeSubDomains]
       x-aspnet-version: [4.0.30319]
@@ -481,13 +482,13 @@ interactions:
     headers:
       Accept: [application/json]
       Accept-Encoding: ['gzip, deflate']
-      CommandName: [group delete]
+      CommandName: [unknown]
       Connection: [keep-alive]
       Content-Length: ['0']
       Content-Type: [application/json; charset=utf-8]
-      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.9.1 msrest/0.4.14
-          msrest_azure/0.4.14 resourcemanagementclient/1.2.0rc2 Azure-SDK-For-Python
-          AZURECLI/2.0.16+dev]
+      User-Agent: [python/3.5.3 (Windows-10-10.0.15063-SP0) requests/2.18.4 msrest/0.4.14
+          msrest_azure/0.4.14 resourcemanagementclient/1.2.0rc3 Azure-SDK-For-Python
+          AZURECLI/2.0.17+dev]
       accept-language: [en-US]
     method: DELETE
     uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/cli_test_traffic_manager000001?api-version=2017-05-10
@@ -496,11 +497,11 @@ interactions:
     headers:
       cache-control: [no-cache]
       content-length: ['0']
-      date: ['Mon, 25 Sep 2017 16:33:56 GMT']
+      date: ['Fri, 13 Oct 2017 21:57:12 GMT']
       expires: ['-1']
-      location: ['https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1DTEk6NUZURVNUOjVGVFJBRkZJQzo1Rk1BTkFHRVJVUDJWTlA0Q1lRQlRFVEgzNnwzOUZDOEU3QkVBMDFGQTdFLVdFU1RVUyIsImpvYkxvY2F0aW9uIjoid2VzdHVzIn0?api-version=2017-05-10']
+      location: ['https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1DTEk6NUZURVNUOjVGVFJBRkZJQzo1Rk1BTkFHRVJKNEo1VkZZSjI1UjJCMlFVWnwwMTM0RjVCMzRFQTcyNTNELVdFU1RVUyIsImpvYkxvY2F0aW9uIjoid2VzdHVzIn0?api-version=2017-05-10']
       pragma: [no-cache]
       strict-transport-security: [max-age=31536000; includeSubDomains]
-      x-ms-ratelimit-remaining-subscription-writes: ['1199']
+      x-ms-ratelimit-remaining-subscription-writes: ['1196']
     status: {code: 202, message: Accepted}
 version: 1
