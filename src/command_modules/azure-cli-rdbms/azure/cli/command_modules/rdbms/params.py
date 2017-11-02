@@ -5,11 +5,12 @@
 from azure.mgmt.rdbms import mysql
 from azure.mgmt.rdbms import postgresql
 
-from azure.cli.core.commands import register_cli_argument
+from azure.cli.core.commands import register_cli_argument, register_extra_cli_argument
 from azure.cli.core.commands.parameters import \
     (get_resource_name_completion_list, tags_type, enum_choice_list, location_type)
 from ._util import PolyParametersContext
 from .validators import configuration_value_validator
+from .custom import validate_subnet
 
 # pylint: disable=line-too-long
 
@@ -107,6 +108,16 @@ for command_group_name in ['mysql', 'postgres']:
     register_cli_argument('{0} server firewall-rule'.format(command_group_name), 'end_ip_address', options_list=('--end-ip-address',),
                           help='The end IP address of the firewall rule. Must be IPv4 format. Use value'
                           ' \'0.0.0.0\' to represent all Azure-internal IP addresses.')
+
+    register_cli_argument('{0} server vnet-rule'.format(command_group_name), 'server_name', options_list=('--server-name', '-s'))
+    register_cli_argument('{0} server vnet-rule'.format(command_group_name), 'virtual_network_rule_name', options_list=('--name', '-n'), id_part='child_name',
+                          help='The name of the vnet rule.')
+    register_cli_argument('{0} server vnet-rule'.format(command_group_name), 'virtual_network_subnet_id', options_list=('--subnet',),
+                          help='Name or ID of the subnet that allows access to an Azure Sql Server.'
+                          'If subnet name is provided, --vnet-name must be provided.')
+
+    register_extra_cli_argument('{0} server vnet-rule create'.format(command_group_name), 'vnet_name', options_list=('--vnet-name'),
+                            help='The virtual network name', validator=validate_subnet)
 
     register_cli_argument('{0} server configuration'.format(command_group_name), 'server_name', options_list=('--server-name', '-s'))
     register_cli_argument('{0} server configuration'.format(command_group_name), 'configuration_name', id_part='child_name', options_list=('--name', '-n'))

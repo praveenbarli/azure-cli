@@ -26,7 +26,7 @@ if not supported_api_version(PROFILE_TYPE, max_api='2017-03-09-profile'):
 
         with ServiceGroup(__name__, server_factory, server_sa, custom_path) as s:
             with s.group('{} server'.format(command_group_name)) as c:
-                c.command('create', 'create_or_update')
+                #c.command('create', 'create_or_update')
                 c.custom_command('restore', '_server_restore')
                 c.command('delete', 'delete', confirmation=True)
                 c.command('show', 'get')
@@ -96,6 +96,23 @@ if not supported_api_version(PROFILE_TYPE, max_api='2017-03-09-profile'):
                 # c.command('delete', 'delete', confirmation=True)
                 # c.command('show', 'get')
                 c.command('list', 'list_by_server')
+
+        #virtual network rules
+        vnet_rule_sa = create_service_adapter(
+            'azure.mgmt.rdbms.{}.operations.virtual_network_rules_operations'.format(server_type),
+            'VirtualNetworkRulesOperations')
+
+        def vnet_rule_factory(args):
+            return management_client(args).virtual_network_rules
+
+        with ServiceGroup(__name__, vnet_rule_factory, vnet_rule_sa, custom_path) as s:
+            with s.group('{} server vnet-rule'.format(command_group_name)) as c:
+                c.command('create', 'create_or_update')
+                c.command('show', 'get')
+                c.command('list', 'list_by_server')
+                c.command('delete', 'delete')
+                c.generic_update_command('update', 'get', 'create_or_update')
+        
 
     load_commands_from_factory('mysql', 'mysql', get_mysql_management_client)
     load_commands_from_factory('postgresql', 'postgres', get_postgresql_management_client)
